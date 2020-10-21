@@ -16,6 +16,8 @@
 #   docs folder of this project.  It is also available www.gnu.org/licenses/
 #
 import local.dev_config  # sets env variable 'TEST_ON_AWS'
+import local.secrets  # sets AWS profile as env variable
+import json
 import os
 import unittest
 import requests
@@ -30,10 +32,17 @@ class MiscTestCase(unittest.TestCase):
     def test_01_raise_error(self):
         lambda_client = Lambda(stack_name=STACK_NAME)
         response = lambda_client.invoke(
-            function_name='RaiseError'
+            function_name='RaiseError',
+            payload={
+                'queryStringParameters': {
+                    'error_id': '4xx',
+                }
+            }
         )
-        self.assertNotIn('FunctionError', response.keys())
-        self.assertEqual(list(), response['Payload'])
+        from pprint import pprint
+        pprint(response)
+        self.assertIn('FunctionError', response.keys())
+        self.assertEqual('ObjectDoesNotExistError', response['Payload']['errorType'])
 
     def test_02_call_ping_endpoint_of_core_api(self):
         """
