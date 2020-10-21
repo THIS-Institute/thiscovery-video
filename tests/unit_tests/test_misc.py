@@ -18,13 +18,13 @@
 import local.dev_config  # sets env variable 'TEST_ON_AWS'
 import os
 import unittest
+import requests
 
-import thiscovery_dev_tools.testing_tools as test_tools
 from src.common.constants import STACK_NAME
 from thiscovery_lib.lambda_utilities import Lambda
 
 
-class MiscTestCase(test_tools.BaseTestCase):
+class MiscTestCase(unittest.TestCase):
 
     @unittest.skipUnless(os.environ['TEST_ON_AWS'] == 'True', 'Invokes lambda on AWS')
     def test_01_raise_error(self):
@@ -34,3 +34,16 @@ class MiscTestCase(test_tools.BaseTestCase):
         )
         self.assertNotIn('FunctionError', response.keys())
         self.assertEqual(list(), response['Payload'])
+
+    def test_02_call_ping_endpoint_of_core_api(self):
+        """
+        This is an example of a call to the ping endpoint of the thiscovery core API.
+        It is not really a test.
+        """
+        full_url = os.environ['AWS_TEST_API'] + 'v1/ping'
+        response = requests.request(
+            method='get',
+            url=full_url,
+        )
+        if response.ok:
+            print(response.json())
