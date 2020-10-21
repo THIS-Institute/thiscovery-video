@@ -132,13 +132,13 @@ dmypy.json
 .idea/
 
 # individual development config settings
-#/local/dev_config.py
+/local/dev_config.py
 
 # local secrets file
-#/local/secrets.py
+/local/secrets.py
 
 # sandbox
-#/sandbox/
+/sandbox/
 
 # symbolic-link shortcuts
 /credentials
