@@ -22,14 +22,13 @@ import thiscovery_lib.utilities as utils
 
 
 @utils.lambda_wrapper
-@utils.api_error_handler
-def raise_error_api(event, context):
+def raise_error(event, context):
     logger = event['logger']
     correlation_id = event['correlation_id']
 
     params = event['queryStringParameters']
     error_id = params['error_id']
-    logger.info('API call', extra={'error_id': error_id, 'correlation_id': correlation_id, 'event': event})
+    logger.info('Event info', extra={'error_id': error_id, 'correlation_id': correlation_id, 'event': event})
 
     errorjson = {'error_id': error_id, 'correlation_id': str(correlation_id)}
     msg = 'no error'
